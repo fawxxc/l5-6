@@ -14,6 +14,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { getLanguage } from './middleware/getLanguage';
 import { dbCreateConnection } from './orm/dbCreateConnection';
 import routes from './routes';
+import ownerRouter from './routes/owner.routes';
 
 export const app = express();
 app.use(cors());
@@ -32,11 +33,14 @@ try {
 }
 app.use(morgan('combined'));
 
+app.use('/owners', ownerRouter);
+
 app.use('/', routes);
 
 app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
