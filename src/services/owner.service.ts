@@ -3,11 +3,8 @@ import { Owner } from '../entities/owner.entity';
 import { CreateOwnerDto } from '../dto/create-owner.dto';
 
 export class OwnerService {
-  // МИ ПРИБРАЛИ ЗМІННУ КЛАСУ ТУТ
-  // private ownerRepository = getRepository(Owner); <--- Це викликало помилку
 
   async getAll() {
-    // Отримуємо репозиторій всередині методу (коли база вже точно підключена)
     const ownerRepository = getRepository(Owner);
     return await ownerRepository.find({
       relations: ['pets'],
@@ -17,7 +14,7 @@ export class OwnerService {
   async getOne(id: number) {
     const ownerRepository = getRepository(Owner);
     return await ownerRepository.findOne({
-      where: { id }, // Використовуємо where для нових версій TypeORM
+      where: { id }, 
       relations: ['pets'],
     });
   }
