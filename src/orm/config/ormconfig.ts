@@ -21,13 +21,11 @@ const config: ConnectionOptions = {
   database: process.env.POSTGRES_DB,
   synchronize: false,
   logging: false,
-  // ОСЬ ТУТ БУЛА ГОЛОВНА ПОМИЛКА:
-  // Прибираємо лапки, це мають бути змінні класів
   entities: [Owner, Pet, Employee, Appointment, Medicine, Delivery, Payment, Vaccination, AnimalVaccination],
   migrations: ['src/orm/migrations/**/*.ts'],
   subscribers: ['src/orm/subscriber/**/*.ts'],
   cli: {
-    entitiesDir: 'src/entities', // Виправив шлях до папки сутностей
+    entitiesDir: 'src/entities', 
     migrationsDir: 'src/orm/migrations',
     subscribersDir: 'src/orm/subscriber',
   },
