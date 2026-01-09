@@ -1,7 +1,24 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 
-import { CustomError } from '../utils/response/custom-error/CustomError';
+export const errorHandler = (
+  err: any,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
+  console.error('Global error handler >>>', err);
 
-export const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
-  return res.status(err.HttpStatusCode).json(err.JSON);
+  const rawStatus =
+    (err && (err.statusCode ?? err.status ?? err.httpCode)) ?? 500;
+
+  const status =
+    typeof rawStatus === 'number' &&
+    rawStatus >= 400 &&
+    rawStatus <= 599
+      ? rawStatus
+      : 500;
+
+  return res.status(status).json({
+    message: err?.message ?? 'Internal Server Error',
+  });
 };

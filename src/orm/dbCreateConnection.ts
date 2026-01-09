@@ -1,17 +1,35 @@
-import { Connection, createConnection, getConnectionManager } from 'typeorm';
+// src/orm/dbCreateConnection.ts
+import {
+  Connection,
+  createConnection,
+  getConnectionManager,
+} from 'typeorm';
 
 import config from './config/ormconfig';
 
-export const dbCreateConnection = async (): Promise<Connection | null> => {
+let connection: Connection | null = null;
+
+export const dbCreateConnection = async (): Promise<Connection> => {
+  // якщо вже є активне підключення – повертаємо його
+  if (connection && connection.isConnected) {
+    return connection;
+  }
+
   try {
-    const conn = await createConnection(config);
-    console.log(`Database connection success. Connection name: '${conn.name}' Database: '${conn.options.database}'`);
+    console.log('PG_HOST from env =', process.env.PG_HOST);
+    connection = await createConnection(config);
+    return connection;
   } catch (err) {
-    if (err.name === 'AlreadyHasActiveConnectionError') {
+    const anyErr = err as any;
+
+    if (anyErr?.name === 'AlreadyHasActiveConnectionError') {
+      // підключення вже створене – дістаємо його з менеджера
       const activeConnection = getConnectionManager().get(config.name);
+      connection = activeConnection;
       return activeConnection;
     }
-    console.log(err);
+
+    console.error('DB connection error:', err);
+    throw err; // важливо: викидаємо помилку, а не повертаємо null
   }
-  return null;
 };

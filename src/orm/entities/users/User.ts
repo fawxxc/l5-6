@@ -16,6 +16,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  passwordHash: string | null;
+
+  @Column({ default: false })
+  mustChangePassword: boolean;
+
   @Column({
     nullable: true,
     unique: true,

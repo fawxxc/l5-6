@@ -1,17 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-
+// src/entities/medicine.entity.ts
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+} from 'typeorm';
+import { MedicineRequest } from './medicine-request.entity';
 import { Delivery } from './delivery.entity';
 
-@Entity('medicines')
+@Entity('medicine')
 export class Medicine {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ length: 100 })
+
+  @Column()
   name: string;
-  @Column()
-  min_stock: number;
-  @Column()
-  status: string;
+
+
+  @Column({ default: 'доза' })
+  unit: string;
+
+
+  @Column({ type: 'int', default: 0 })
+  stock: number;
+
+
+  @OneToMany(() => MedicineRequest, (req) => req.medicine)
+  requests: MedicineRequest[];
+
+
   @OneToMany(() => Delivery, (delivery) => delivery.medicine)
   deliveries: Delivery[];
 }

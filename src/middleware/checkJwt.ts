@@ -24,7 +24,6 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    // Refresh and send a new token on every request
     const newToken = createJwtToken(jwtPayload as JwtPayload);
     res.setHeader('token', `Bearer ${newToken}`);
     return next();

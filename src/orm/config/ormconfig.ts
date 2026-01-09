@@ -1,4 +1,5 @@
-import { ConnectionOptions } from 'typeorm';
+// src/orm/config/ormconfig.ts
+import type { ConnectionOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { AnimalVaccination } from '../../entities/animal-vaccination.entity';
@@ -11,27 +12,45 @@ import { Payment } from '../../entities/payment.entity';
 import { Pet } from '../../entities/pet.entity';
 import { Vaccination } from '../../entities/vaccination.entity';
 
+import { MedicineRequest } from '../../entities/medicine-request.entity';
+import { UserAccount } from '../../entities/userAccount.entity';
+
 const config: ConnectionOptions = {
   type: 'postgres',
   name: 'default',
-  host: process.env.PG_HOST,
-  port: Number(process.env.PG_PORT),
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  synchronize: false,
+  host: process.env.PG_HOST ?? 'localhost',
+  port: Number(process.env.PG_PORT ?? 5432),
+  username: process.env.POSTGRES_USER ?? 'postgres',
+  password: process.env.POSTGRES_PASSWORD ?? 'postgres',
+  database: process.env.POSTGRES_DB ?? 'postgres',
+
+  synchronize: true,
   logging: false,
-  // ОСЬ ТУТ БУЛА ГОЛОВНА ПОМИЛКА:
-  // Прибираємо лапки, це мають бути змінні класів
-  entities: [Owner, Pet, Employee, Appointment, Medicine, Delivery, Payment, Vaccination, AnimalVaccination],
+
+  entities: [
+    Owner,
+    Pet,
+    Employee,
+    Appointment,
+    Medicine,
+    Delivery,
+    Payment,
+    Vaccination,
+    AnimalVaccination,
+    MedicineRequest,
+    UserAccount,
+  ],
+
   migrations: ['src/orm/migrations/**/*.ts'],
   subscribers: ['src/orm/subscriber/**/*.ts'],
+
   cli: {
-    entitiesDir: 'src/entities', // Виправив шлях до папки сутностей
+    entitiesDir: 'src/entities',
     migrationsDir: 'src/orm/migrations',
     subscribersDir: 'src/orm/subscriber',
   },
+
   namingStrategy: new SnakeNamingStrategy(),
 };
 
-export = config;
+export default config;

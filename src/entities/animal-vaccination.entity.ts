@@ -1,28 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+// src/entities/animal-vaccination.entity.ts
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  Column,
+} from 'typeorm';
 
 import { Pet } from './pet.entity';
 import { Vaccination } from './vaccination.entity';
 
-@Entity('animal-vaccinations')
+@Entity('animal_vaccination')
 export class AnimalVaccination {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
-  animal_id: number;
-  @Column()
-  vaccine_id: number;
-  @Column()
-  vet_id: number;
-  @Column()
-  vaccinate_date: Date;
-  @Column()
-  status: string;
 
-  @ManyToOne(() => Pet, (pet) => pet.vaccinations, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'pet_id' })
+
+  @ManyToOne(() => Pet, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'animal_id' })
   pet: Pet;
 
-  @ManyToOne(() => Vaccination, (vaccination) => vaccination.animalVaccinations)
+
+  @ManyToOne(() => Vaccination, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'vaccination_id' })
   vaccination: Vaccination;
+
+
+  @Column({ type: 'date', name: 'vaccination_date', nullable: true })
+  vaccinationDate?: Date;
 }
